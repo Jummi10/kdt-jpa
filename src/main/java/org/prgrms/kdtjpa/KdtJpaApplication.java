@@ -1,0 +1,13 @@
+package org.prgrms.kdtjpa;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class KdtJpaApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(KdtJpaApplication.class, args);
+    }
+
+}
