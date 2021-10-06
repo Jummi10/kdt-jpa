@@ -1,5 +1,6 @@
 package org.prgrms.kdtjpa.domain.order;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.prgrms.kdtjpa.domain.order.OrderStatus.*;
 
 import java.time.LocalDateTime;
@@ -9,6 +10,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 
+import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -52,6 +54,52 @@ public class AssociationMappingTest {
         log.info("{}, {}", member.getOrders().get(0).getUuid(), order.getUuid());
 
         entityManager.close();
+    }
+
+    @Test
+    void Order_OrderItem_연관관계_매핑_테스트() {
+        EntityManager entityManager = emf.createEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+
+        transaction.begin();
+
+        Member member = createMember("loopy");
+        entityManager.persist(member);
+
+        Order order = new Order();
+        order.setUuid(UUID.randomUUID().toString());
+        order.setOrderStatus(OPENED);
+        order.setOrderDatetime(LocalDateTime.now());
+        order.setMember(member);
+        entityManager.persist(order);
+
+        OrderItem orderItem1 = new OrderItem();
+        orderItem1.setPrice(1000);
+        orderItem1.setQuantity(2);
+        orderItem1.setOrder(order);
+        OrderItem orderItem2 = new OrderItem();
+        orderItem2.setPrice(2000);
+        orderItem2.setQuantity(3);
+        orderItem2.setOrder(order);
+        entityManager.persist(orderItem1);
+        entityManager.persist(orderItem2);
+
+        order.setOrderItems(Lists.newArrayList(orderItem1, orderItem2));
+
+        transaction.commit();
+
+        // then
+        entityManager.clear();
+        OrderItem foundOrderItem1 = entityManager.find(OrderItem.class, orderItem1.getId());
+
+        assertThat(foundOrderItem1.getOrder()).isNotNull();
+        assertThat(foundOrderItem1.getOrder().getUuid()).isEqualTo(order.getUuid());
+
+        assertThat(order.getOrderItems().size()).isEqualTo(2);
+        assertThat(order.getOrderItems().get(0).getPrice()).isEqualTo(1000);
+        assertThat(order.getOrderItems().get(0).getQuantity()).isEqualTo(2);
+        assertThat(order.getOrderItems().get(1).getPrice()).isEqualTo(2000);
+        assertThat(order.getOrderItems().get(1).getQuantity()).isEqualTo(3);
     }
 
     private Member createMember(String nickname) {
