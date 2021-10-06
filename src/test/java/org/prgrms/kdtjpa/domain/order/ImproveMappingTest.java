@@ -61,7 +61,7 @@ public class ImproveMappingTest {
     }
 
     @Test
-    void composite_key_IdClass_test() {
+    void composite_key_test() {
         EntityManager entityManager = emf.createEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
 
@@ -69,14 +69,13 @@ public class ImproveMappingTest {
 
         String id1 = "ID1", id2 = "ID2";
         Parent parent = new Parent();
-        parent.setId1(id1);
-        parent.setId2(id2);
+        parent.setId(new ParentId(id1, id2));
 
         entityManager.persist(parent);
         transaction.commit();
 
         entityManager.clear();
         Parent found = entityManager.find(Parent.class, new ParentId(id1, id2));// 식별자로 사용할 객체 전달
-        log.info("{} {}", found.getId1(), found.getId2());
+        log.info("{} {}", found.getId().getId1(), found.getId().getId2());
     }
 }
