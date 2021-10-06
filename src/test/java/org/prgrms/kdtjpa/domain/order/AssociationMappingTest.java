@@ -45,7 +45,7 @@ public class AssociationMappingTest {
         entityManager.persist(order);
         transaction.commit();
 
-        entityManager.clear();
+        // entityManager.clear();
         Order foundOrder = entityManager.find(Order.class, order.getUuid());
 
         log.info("{}", foundOrder.getMember().getNickName());    // 객체 그래프 탐색
@@ -53,7 +53,7 @@ public class AssociationMappingTest {
         log.info("{}", order.getMember().getOrders().size());
         log.info("{}, {}", member.getOrders().get(0).getUuid(), order.getUuid());
 
-        entityManager.close();
+        // entityManager.close();
     }
 
     @Test
@@ -89,7 +89,7 @@ public class AssociationMappingTest {
         transaction.commit();
 
         // then
-        entityManager.clear();
+        // entityManager.clear();
         OrderItem foundOrderItem1 = entityManager.find(OrderItem.class, orderItem1.getId());
 
         assertThat(foundOrderItem1.getOrder()).isNotNull();
@@ -112,7 +112,7 @@ public class AssociationMappingTest {
 
         int price = 5000;
         int stockQuantity = 10;
-        Item item = new Item();
+        Item item = new Food();
         item.setPrice(price);
         item.setStockQuantity(stockQuantity);
         entityManager.persist(item);
@@ -127,7 +127,7 @@ public class AssociationMappingTest {
         transaction.commit();
 
         //when
-        entityManager.clear();
+        // entityManager.clear();
         OrderItem foundOrderItem = entityManager.find(OrderItem.class, orderItem.getId());
         Item foundItem = foundOrderItem.getItem();
 
