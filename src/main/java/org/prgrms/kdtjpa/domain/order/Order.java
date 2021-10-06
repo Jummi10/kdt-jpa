@@ -23,7 +23,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "orders") // order: 많은 db의 keyword로 동작
-public class Order {
+public class Order extends BaseEntity {
     @Id
     @Column(name = "id")
     private String uuid;

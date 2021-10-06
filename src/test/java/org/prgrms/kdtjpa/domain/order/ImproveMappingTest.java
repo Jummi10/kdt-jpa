@@ -1,5 +1,8 @@
 package org.prgrms.kdtjpa.domain.order;
 
+import java.time.LocalDateTime;
+import java.util.UUID;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
@@ -32,5 +35,26 @@ public class ImproveMappingTest {
 
         transaction.commit();
         //entityManager.close();
+    }
+
+    @Test
+    void mapped_super_class_test() {
+        EntityManager entityManager = emf.createEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+
+        transaction.begin();
+
+        Order order = new Order();
+        order.setUuid(UUID.randomUUID().toString());
+        order.setOrderStatus(OrderStatus.OPENED);
+        order.setMemo("---");
+        order.setOrderDatetime(LocalDateTime.now());
+
+        order.setCreatedBy("jummi");
+        order.setCreatedAt(LocalDateTime.now());
+
+        entityManager.persist(order);
+
+        transaction.commit();
     }
 }
