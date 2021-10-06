@@ -1,10 +1,10 @@
 package org.prgrms.kdtjpa.domain.order;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -45,8 +45,8 @@ public class Order extends BaseEntity {
     @JoinColumn(name = "member_id", referencedColumnName = "id") // FK name, join하기 위해 참조하는 테이블의 컬럼명
     private Member member;
 
-    @OneToMany(mappedBy = "order")
-    private List<OrderItem> orderItems = new ArrayList<>();
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    private List<OrderItem> orderItems;
 
     // 연관관계 편의 메소드
     public void setMember(Member member) {  // 주문 통해서 회원 세팅

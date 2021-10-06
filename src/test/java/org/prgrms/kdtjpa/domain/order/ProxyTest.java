@@ -64,4 +64,24 @@ public class ProxyTest {
         String nickName = member.getNickName(); // 실제 사용
         log.info("MEMBER USE AFTER IS-LOADED: {}", emf.getPersistenceUnitUtil().isLoaded(member));
     }
+
+    @Test
+    void move_persist() {
+        EntityManager entityManager = emf.createEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+
+        Order order = entityManager.find(Order.class, uuid);    // 영속 상태
+
+        transaction.begin();
+
+        OrderItem orderItem = new OrderItem();  // CASCADE type을 주지 않으면 insert되지 않고 준영속 상태로 남아있다.
+        orderItem.setQuantity(10);
+        orderItem.setPrice(1000);
+
+        // Order.orderItems에 cascade = CascadeType.ALL를 주면,
+        // commit할 때 영속성 전이를 통해서 orderItem이 준영속 -> 영속 상태, insert query
+        order.addOrderItem(orderItem);
+
+        transaction.commit();   // flush()
+    }
 }
