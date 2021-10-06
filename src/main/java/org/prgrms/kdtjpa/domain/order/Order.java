@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import lombok.Getter;
@@ -31,6 +33,10 @@ public class Order {
     private LocalDateTime orderDatetime;
 
     // member_fk
-    @Column(name = "member_id")
+    @Column(name = "member_id", insertable = false, updatable = false)
     private Long memberId;
+
+    @ManyToOne
+    @JoinColumn(name = "member_id", referencedColumnName = "id") // FK name, join하기 위해 참조하는 테이블의 컬럼명
+    private Member member;
 }
