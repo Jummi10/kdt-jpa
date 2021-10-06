@@ -25,8 +25,8 @@ public class ImproveMappingTest {
         transaction.begin();
 
         Food food = new Food();
-        food.setPrice(1000);
-        food.setStockQuantity(100);
+        food.setPrice(2000);
+        food.setStockQuantity(200);
         food.setChef("백종원");
         entityManager.persist(food);
 

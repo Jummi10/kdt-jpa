@@ -3,6 +3,7 @@ package org.prgrms.kdtjpa.domain.order;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -19,7 +20,8 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "item")
-@Inheritance(strategy = InheritanceType.JOINED)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "DTYPE")
 public abstract class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
