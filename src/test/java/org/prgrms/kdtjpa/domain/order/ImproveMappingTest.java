@@ -8,6 +8,8 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 
 import org.junit.jupiter.api.Test;
+import org.prgrms.kdtjpa.domain.parent.Parent;
+import org.prgrms.kdtjpa.domain.parent.ParentId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -56,5 +58,25 @@ public class ImproveMappingTest {
         entityManager.persist(order);
 
         transaction.commit();
+    }
+
+    @Test
+    void composite_key_IdClass_test() {
+        EntityManager entityManager = emf.createEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+
+        transaction.begin();
+
+        String id1 = "ID1", id2 = "ID2";
+        Parent parent = new Parent();
+        parent.setId1(id1);
+        parent.setId2(id2);
+
+        entityManager.persist(parent);
+        transaction.commit();
+
+        entityManager.clear();
+        Parent found = entityManager.find(Parent.class, new ParentId(id1, id2));// 식별자로 사용할 객체 전달
+        log.info("{} {}", found.getId1(), found.getId2());
     }
 }
