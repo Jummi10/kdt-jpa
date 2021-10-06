@@ -102,6 +102,43 @@ public class AssociationMappingTest {
         assertThat(order.getOrderItems().get(1).getQuantity()).isEqualTo(3);
     }
 
+    @Test
+    void Item_OrderItem_연관관계_매핑_테스트() {
+        //given
+        EntityManager entityManager = emf.createEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+
+        transaction.begin();
+
+        int price = 5000;
+        int stockQuantity = 10;
+        Item item = new Item();
+        item.setPrice(price);
+        item.setStockQuantity(stockQuantity);
+        entityManager.persist(item);
+
+        int quantity = 5;
+        OrderItem orderItem = new OrderItem();
+        orderItem.setPrice(price);
+        orderItem.setQuantity(quantity);
+        orderItem.setItem(item);
+        entityManager.persist(orderItem);
+
+        transaction.commit();
+
+        //when
+        entityManager.clear();
+        OrderItem foundOrderItem = entityManager.find(OrderItem.class, orderItem.getId());
+        Item foundItem = foundOrderItem.getItem();
+
+        //then
+        assertThat(foundItem).isNotNull();
+        assertThat(foundItem.getPrice()).isEqualTo(price);
+        assertThat(foundItem.getStockQuantity()).isEqualTo(stockQuantity);
+        assertThat(foundItem.getOrderItems().size()).isEqualTo(1);
+        assertThat(foundItem.getOrderItems().get(0).getQuantity()).isEqualTo(quantity);
+    }
+
     private Member createMember(String nickname) {
         Member member = new Member();
         member.setName("jungmi park");

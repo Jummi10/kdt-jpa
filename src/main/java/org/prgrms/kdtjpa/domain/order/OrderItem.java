@@ -29,12 +29,16 @@ public class OrderItem {
     // fk
     @Column(name = "order_id", insertable = false, updatable = false)
     private String orderId;
-    @Column(name = "item_id")
+    @Column(name = "item_id", insertable = false, updatable = false)
     private Long itemId;
 
     @ManyToOne
     @JoinColumn(name = "order_id", referencedColumnName = "id")
     private Order order;
+
+    @ManyToOne
+    @JoinColumn(name = "item_id", referencedColumnName = "id")
+    private Item item;
 
     // 연관관계 편의 메소드
     public void setOrder(Order order) {
@@ -44,5 +48,14 @@ public class OrderItem {
 
         this.order = order;
         order.getOrderItems().add(this);
+    }
+
+    public void setItem(Item item) {
+        if (Objects.nonNull(item)) {
+            item.getOrderItems().remove(this);
+        }
+
+        this.item = item;
+        item.getOrderItems().add(this);
     }
 }
