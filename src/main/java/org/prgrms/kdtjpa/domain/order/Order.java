@@ -41,7 +41,7 @@ public class Order extends BaseEntity {
     @Column(name = "member_id", insertable = false, updatable = false)
     private Long memberId;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", referencedColumnName = "id") // FK name, join하기 위해 참조하는 테이블의 컬럼명
     private Member member;
 
