@@ -38,12 +38,18 @@ public class AssociationMappingTest {
         order.setOrderStatus(OPENED);
         order.setMemo("부재시 전화주세요.");
         order.setMember(member);
+        // member.setOrders(Lists.newArrayList(order));    // 객체가 따로 참조할 수 있게 서로 set을 해주어야 한다.
 
         entityManager.persist(order);
         transaction.commit();
 
-        log.info("{}", order.getMember().getNickName());    // 객체 그래프 탐색
-        // member.getOrders();
+        entityManager.clear();
+        Order foundOrder = entityManager.find(Order.class, order.getUuid());
+
+        log.info("{}", foundOrder.getMember().getNickName());    // 객체 그래프 탐색
+        log.info("{}", foundOrder.getMember().getOrders().size());
+        log.info("{}", order.getMember().getOrders().size());
+        log.info("{}, {}", member.getOrders().get(0).getUuid(), order.getUuid());
 
         entityManager.close();
     }

@@ -1,11 +1,13 @@
 package org.prgrms.kdtjpa.domain.order;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -36,7 +38,17 @@ public class Order {
     @Column(name = "member_id", insertable = false, updatable = false)
     private Long memberId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "member_id", referencedColumnName = "id") // FK name, join하기 위해 참조하는 테이블의 컬럼명
     private Member member;
+
+    // 연관관계 편의 메소드
+    public void setMember(Member member) {  // 주문 통해서 회원 세팅
+        if (Objects.nonNull(this.member)) { // 이미 있다면
+            member.getOrders().remove(this);
+        }
+
+        this.member = member;
+        member.getOrders().add(this);
+    }
 }
