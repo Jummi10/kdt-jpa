@@ -23,7 +23,7 @@ public class DataSourceConfiguration {
         // 어떤 database를 사용할 것인지
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("org.h2.Driver");
-        dataSource.setUrl("jdbc:h2:~/order-test");
+        dataSource.setUrl("jdbc:h2:~/kdt-jpa");
         dataSource.setUsername("sa");
         dataSource.setPassword("");
 
