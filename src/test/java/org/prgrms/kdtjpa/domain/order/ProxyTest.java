@@ -83,5 +83,19 @@ public class ProxyTest {
         order.addOrderItem(orderItem);
 
         transaction.commit();   // flush()
+        entityManager.clear();
+
+        // -------------------------
+
+        Order order2 = entityManager.find(Order.class, uuid);
+
+        transaction.begin();
+
+        order2.getOrderItems().remove(0);   // 더 이상 order2와 연관관계 X. 0번 orderItem은 고아 상태
+
+        // orphanRemoval = false(default): orderItem이 db에서 delete query가 일어나지 않음.
+        // orphanRemoval = true: flush 순간 고아가 된 객체를 RDB에서도 삭제를 하겠다.
+        transaction.commit();
+        entityManager.clear();
     }
 }
