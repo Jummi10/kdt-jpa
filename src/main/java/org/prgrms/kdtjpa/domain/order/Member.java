@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -37,7 +38,7 @@ public class Member extends BaseEntity {
     @Column(name = "description")
     private String description;
 
-    @OneToMany(mappedBy = "member") // Order의 FK를 가진 필드명
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, orphanRemoval = true) // Order의 FK를 가진 필드명
     private List<Order> orders = new ArrayList<>();
 
     // 연관관계 편의 메소드 - 회원 통해서 주문 추가

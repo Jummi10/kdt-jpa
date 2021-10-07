@@ -2,8 +2,10 @@ package org.prgrms.kdtjpa.domain.order;
 
 import java.util.Objects;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -32,18 +34,18 @@ public class OrderItem extends BaseEntity {
     @Column(name = "item_id", insertable = false, updatable = false)
     private Long itemId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "order_id", referencedColumnName = "id")
     private Order order;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "item_id", referencedColumnName = "id")
     private Item item;
 
     // 연관관계 편의 메소드
     public void setOrder(Order order) {
-        if (Objects.nonNull(order)) {
-            order.getOrderItems().remove(this);
+        if (Objects.nonNull(this.order)) {
+            this.order.getOrderItems().remove(this);
         }
 
         this.order = order;
@@ -51,8 +53,8 @@ public class OrderItem extends BaseEntity {
     }
 
     public void setItem(Item item) {
-        if (Objects.nonNull(item)) {
-            item.getOrderItems().remove(this);
+        if (Objects.nonNull(this.item)) {
+            this.item.getOrderItems().remove(this);
         }
 
         this.item = item;
