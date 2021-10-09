@@ -1,6 +1,8 @@
 package org.prgrms.kdtjpa.order.controller;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.*;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -19,13 +21,16 @@ import org.prgrms.kdtjpa.order.dto.OrderDto;
 import org.prgrms.kdtjpa.order.dto.OrderItemDto;
 import org.prgrms.kdtjpa.order.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+@AutoConfigureRestDocs
 @AutoConfigureMockMvc   // mock mvc를 이용한 rest 호출 테스트를 쉽게 할 수 있다.
 @SpringBootTest
 class OrderControllerTest {
@@ -115,7 +120,43 @@ class OrderControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(orderDto)))
             .andExpect(status().isOk())
-            .andDo(print());
+            .andDo(print())
+            .andDo(document("order-save",
+                requestFields(
+                    fieldWithPath("uuid").type(JsonFieldType.STRING).description("UUID"),
+                    fieldWithPath("orderDatetime").type(JsonFieldType.STRING).description("orderDatetime"),
+                    fieldWithPath("orderStatus").type(JsonFieldType.STRING).description("orderStatus"),
+                    fieldWithPath("memo").type(JsonFieldType.STRING).description("memo"),
+                    fieldWithPath("memberDto").type(JsonFieldType.OBJECT).description("memberDto"),
+                    fieldWithPath("memberDto.id").type(JsonFieldType.NULL).description("memberDto.id"),
+                    fieldWithPath("memberDto.name").type(JsonFieldType.STRING).description("memberDto.name"),
+                    fieldWithPath("memberDto.nickName").type(JsonFieldType.STRING).description("memberDto.nickName"),
+                    fieldWithPath("memberDto.age").type(JsonFieldType.NUMBER).description("memberDto.age"),
+                    fieldWithPath("memberDto.address").type(JsonFieldType.STRING).description("memberDto.address"),
+                    fieldWithPath("memberDto.description").type(JsonFieldType.STRING).description("memberDto.desc"),
+                    fieldWithPath("orderItemDtos[]").type(JsonFieldType.ARRAY).description("orderItemDtos"),
+                    fieldWithPath("orderItemDtos[].id").type(JsonFieldType.NULL).description("orderItemDtos.id"),
+                    fieldWithPath("orderItemDtos[].price").type(JsonFieldType.NUMBER)
+                        .description("orderItemDtos.price"),
+                    fieldWithPath("orderItemDtos[].quantity").type(JsonFieldType.NUMBER)
+                        .description("orderItemDtos.quantity"),
+                    fieldWithPath("orderItemDtos[].itemDto").type(JsonFieldType.OBJECT)
+                        .description("orderItemDtos.itemDto"),
+                    fieldWithPath("orderItemDtos[].itemDto.price").type(JsonFieldType.NUMBER)
+                        .description("orderItemDtos.itemDto.price"),
+                    fieldWithPath("orderItemDtos[].itemDto.stockQuantity").type(JsonFieldType.NUMBER)
+                        .description("orderItemDtos.itemDto.stockQuantity"),
+                    fieldWithPath("orderItemDtos[].itemDto.type").type(JsonFieldType.STRING)
+                        .description("orderItemDtos.itemDto.type"),
+                    fieldWithPath("orderItemDtos[].itemDto.chef").type(JsonFieldType.STRING)
+                        .description("orderItemDtos.itemDto.chef")
+                ),
+                responseFields(
+                    fieldWithPath("statusCode").type(JsonFieldType.NUMBER).description("상태코드"),
+                    fieldWithPath("data").type(JsonFieldType.STRING).description("데이터"),    // uuid 넘겨줌
+                    fieldWithPath("serverDatetime").type(JsonFieldType.STRING).description("응답시간")
+                ))
+            );
     }
 
     @Test
